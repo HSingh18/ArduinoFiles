@@ -31,7 +31,7 @@ void setup() {
   pinMode(BUTTON5, INPUT_PULLUP);
   sizeofarr = random(1, 6);   //assign a random number from 1 to 5 to be the max siz of the random array
   Serial.begin(9600);
-  Serial.println("Program Will Start:");
+  Serial.println("Simon says:");
 }
 
 void randomLED(){
