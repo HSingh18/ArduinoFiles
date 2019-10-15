@@ -1,18 +1,21 @@
 #define LED1  7
 #define LED2  8
-#define LED3  9   //Skipped 10 because pin does not work
-#define LED4  11
+#define LED3  9
+#define LED4  10
+#define LED5  11
 #define BUTTON1 2   //Skipped 0,1 because pins do not work
 #define BUTTON2 3
-#define BUTTON3 5   //Skiped 4 because pin does not work
-#define BUTTON4 6
+#define BUTTON3 4
+#define BUTTON4 5
+#define BUTTON5 6
 
 int counter = 0;  //counter so code doesnt run in a loop forever
-int userarr[4];   //sequence of numbers that user inputted
 int correct = 1;  //variable to see if both arr sequences match
-int numarr[4];    //array in which the random number is stored
-int sizeofarr = 4;    //max size of the array
+int sizeofarr = 5;    //max size of the array
 int startdelay = 500;   //how long each LED stays on for
+int numarr[10];    //array in which the random number is stored
+int userarr[10];   //sequence of numbers that user inputted
+int counterforsizeofarr = 0;    //counter for adding user inputs into an array
 
 void setup() {
   randomSeed(analogRead(0));  //generate a random number
@@ -24,13 +27,16 @@ void setup() {
   pinMode(BUTTON3, INPUT_PULLUP);
   pinMode(LED4, OUTPUT);
   pinMode(BUTTON4, INPUT_PULLUP);
+  pinMode(LED5, OUTPUT);
+  pinMode(BUTTON5, INPUT_PULLUP);
+  sizeofarr = random(1, 6);   //assign a random number from 1 to 5 to be the max siz of the random array
   Serial.begin(9600);
   Serial.println("Program Will Start:");
 }
 
 void randomLED(){
   for(int i = 0; i < sizeofarr; i++){
-    numarr[i] = random(1, sizeofarr); //creating a random sequence of numbers
+    numarr[i] = random(1, 6); //creating a random sequence of numbers
   }
   for(int i = 0; i < sizeofarr; i++){ //this loop with print the sequence with LED's, i am using serial.print statement to stim this
     if(numarr[i] == 1){       //if the arr[i] is 1, then turn LED1 on for "startdelay" amount of time, also print 1
@@ -61,6 +67,13 @@ void randomLED(){
       digitalWrite(LED4, LOW);
       delay(startdelay);
     }
+    if(numarr[i] == 5){   //if the arr[i] is 5, then turn LED4 on for "startdelay" amount of time, also print 5
+      digitalWrite(LED5, HIGH);
+      Serial.println("5");
+      delay(startdelay);
+      digitalWrite(LED5, LOW);
+      delay(startdelay);
+    }
   }
 }
 
@@ -82,6 +95,10 @@ void correct1(){    //Function which will display LED's is a way to represent th
     delay(startdelay/8);
     digitalWrite(LED4, LOW);
     delay(startdelay/8);
+    digitalWrite(LED5, HIGH);
+    delay(startdelay/8);
+    digitalWrite(LED5, LOW);
+    delay(startdelay/8);
   }
 }
 
@@ -91,17 +108,19 @@ void wrong1(){    //Function which will display LED's in a way to represent that
     digitalWrite(LED2, HIGH);
     digitalWrite(LED3, HIGH);
     digitalWrite(LED4, HIGH);
+    digitalWrite(LED5, HIGH);
     delay(startdelay);
     digitalWrite(LED1, LOW);
     digitalWrite(LED2, LOW);
     digitalWrite(LED3, LOW);
     digitalWrite(LED4, LOW);
+    digitalWrite(LED5, LOW);
     delay(startdelay);
   }
 }
 
 void compare(){   //Function which will compare if the two arrays are the same
-  for(int i = 0; i < 4; i++){ //this loop will see if the two sequences are the same
+  for(int i = 0; i < sizeofarr; i++){ //this loop will see if the two sequences are the same
     if(numarr[i] == userarr[i]){
       correct++;
     }
@@ -109,13 +128,29 @@ void compare(){   //Function which will compare if the two arrays are the same
       correct = 0;
     }
   }
-  if(correct == 5){         //counter is first 1, and there are max 4 random numbers in array so 4+1=5
+  if(correct == sizeofarr+1){         //counter is first 1, and the max size of the array is defined by sizeofarr
+    Serial.println();   //printing "Correct Sequence" on a new line
     Serial.println("Correct Sequence");
     correct1();   //Print out the LED sequence for correct
   }
   else{
+    Serial.println();   //printing "Correct Sequence" on a new line
     Serial.println("Wrong Sequence");
     wrong1();   //Print out the LED sequence for incorrect
+  }
+}
+
+void buttonclick(){   //function that will check which button the user clicked
+  for(int i = 2; i <= 6; i++){    //loop will trverse thru all the buttons checking to see which one gets clicked first
+    if(digitalRead(i) == LOW){    //if a button does get clicked
+      digitalWrite(i+5, HIGH);    //turn on the respective led which happens to be +5 the assigned button pin
+      userarr[counterforsizeofarr] = i-1;   //set the user arr to the number represented by the led
+      delay(500);
+      digitalWrite(i+5, LOW);   //turn off the led
+      Serial.print("ARR");Serial.print(counterforsizeofarr);Serial.print(" = ");
+      Serial.println(userarr[counterforsizeofarr]);
+      counterforsizeofarr++;
+    }
   }
 }
 
@@ -123,173 +158,17 @@ void loop() {
   if(counter == 0){
     randomLED();          //code to generate a random number
     counter++;
-  }
-  
-  if(counter == 1){   //Getting the first input from the user/ the first button press
-//    delay(startdelay);
     Serial.println("Your Turn");
-    if(digitalRead(BUTTON1) == LOW){    //If BUTTON1 is pressed turn on LED1 and write 1 into the array at spot 0
-      digitalWrite(LED1, HIGH);
-      userarr[0] = 1;
-      delay(500);   //delay is used to keep LED on for a certain amount of time
-      digitalWrite(LED1, LOW);
-      Serial.print("ARR1 = ");
-      Serial.println(userarr[0]);
-      counter++;
-    }
-    else if(digitalRead(BUTTON2) == LOW){   //If BUTTON2 is pressed turn on LED2 and write 2 into the array at spot 0
-      digitalWrite(LED2, HIGH);
-      userarr[0] = 2;
-      delay(500);
-      digitalWrite(LED2, LOW);
-      Serial.print("ARR1 = ");
-      Serial.println(userarr[0]);
-      counter++;
-    }
-    else if(digitalRead(BUTTON3) == LOW){   //If BUTTON3 is pressed turn on LED3 and write 3 into the array at spot 0
-      digitalWrite(LED3, HIGH);
-      userarr[0] = 3;
-      delay(500);
-      digitalWrite(LED3, LOW);
-      Serial.print("ARR1 = ");
-      Serial.println(userarr[0]);
-      counter++;
-    }
-    else if(digitalRead(BUTTON4) == LOW){   //If BUTTON4 is pressed turn on LED4 and write 4 into the array at spot 0
-      digitalWrite(LED4, HIGH);
-      userarr[0] = 4;
-      delay(500);
-      digitalWrite(LED4, LOW);
-      Serial.print("ARR1 = ");
-      Serial.println(userarr[0]);
-      counter++;
-    }
   }
-  
-  if(counter == 2){   //Getting the second input from the user/ the second button press
-//    delay(startdelay);
-    if(digitalRead(BUTTON1) == LOW){   //If BUTTON1 is pressed turn on LED1 and write 1 into the array at spot 1
-      digitalWrite(LED1, HIGH);
-      userarr[1] = 1;
-      delay(500);
-      digitalWrite(LED1, LOW);
-      Serial.print("ARR2 = ");
-      Serial.println(userarr[1]);
-      counter++;
-    }
-    else if(digitalRead(BUTTON2) == LOW){   //If BUTTON2 is pressed turn on LED2 and write 2 into the array at spot 1
-      digitalWrite(LED2, HIGH);
-      userarr[1] = 2;
-      delay(500);
-      digitalWrite(LED2, LOW);
-      Serial.print("ARR2 = ");
-      Serial.println(userarr[1]);
-      counter++;
-    }
-    else if(digitalRead(BUTTON3) == LOW){   //If BUTTON3 is pressed turn on LED3 and write 3 into the array at spot 1
-      digitalWrite(LED3, HIGH);
-      userarr[1] = 3;
-      delay(500);
-      digitalWrite(LED3, LOW);
-      Serial.print("ARR2 = ");
-      Serial.println(userarr[1]);
-      counter++;
-    }
-    else if(digitalRead(BUTTON4) == LOW){   //If BUTTON4 is pressed turn on LED4 and write 4 into the array at spot 1
-      digitalWrite(LED4, HIGH);
-      userarr[1] = 4;
-      delay(500);
-      digitalWrite(LED4, LOW);
-      Serial.print("ARR2 = ");
-      Serial.println(userarr[1]);
-      counter++;
-    }
+  while(counterforsizeofarr != sizeofarr){    //run the function buttonclick() until the userarr is filled with as many elements as in the numarr
+    buttonclick();    //function to check which button the user clicked
   }
-  
-  if(counter == 3){   //Getting the third input from the user/ the third button press
-//    delay(startdelay);
-    if(digitalRead(BUTTON1) == LOW){   //If BUTTON1 is pressed turn on LED1 and write 1 into the array at spot 2
-      digitalWrite(LED1, HIGH);
-      userarr[2] = 1;
-      delay(500);
-      digitalWrite(LED1, LOW);
-      Serial.print("ARR3 = ");
-      Serial.println(userarr[2]);
-      counter++;
-    }
-    else if(digitalRead(BUTTON2) == LOW){   //If BUTTON2 is pressed turn on LED2 and write 2 into the array at spot 2
-      digitalWrite(LED2, HIGH);
-      userarr[2] = 2;
-      delay(500);
-      digitalWrite(LED2, LOW);
-      Serial.print("ARR3 = ");
-      Serial.println(userarr[2]);
-      counter++;
-    }
-    else if(digitalRead(BUTTON3) == LOW){   //If BUTTON3 is pressed turn on LED3 and write 3 into the array at spot 2
-      digitalWrite(LED3, HIGH);
-      userarr[2] = 3;
-      delay(500);
-      digitalWrite(LED3, LOW);
-      Serial.print("ARR3 = ");
-      Serial.println(userarr[2]);
-      counter++;
-    }
-    else if(digitalRead(BUTTON4) == LOW){   //If BUTTON4 is pressed turn on LED4 and write 4 into the array at spot 2
-      digitalWrite(LED4, HIGH);
-      userarr[2] = 4;
-      delay(500);
-      digitalWrite(LED4, LOW);
-      Serial.print("ARR3 = ");
-      Serial.println(userarr[2]);
-      counter++;
-    }
-  }
-  
-  if(counter == 4){   //Getting the fourth input from the user/ the fourth button press
-//    delay(startdelay);
-    if(digitalRead(BUTTON1) == LOW){   //If BUTTON1 is pressed turn on LED1 and write 1 into the array at spot 4
-      digitalWrite(LED1, HIGH);
-      userarr[3] = 1;
-      delay(500);
-      digitalWrite(LED1, LOW);
-      Serial.print("ARR4 = ");
-      Serial.println(userarr[3]);
-      counter++;
-    }
-    else if(digitalRead(BUTTON2) == LOW){   //If BUTTON2 is pressed turn on LED2 and write 2 into the array at spot 4
-      digitalWrite(LED2, HIGH);
-      userarr[3] = 2;
-      delay(500);
-      digitalWrite(LED2, LOW);
-      Serial.print("ARR4 = ");
-      Serial.println(userarr[3]);
-      counter++;
-    }
-    else if(digitalRead(BUTTON3) == LOW){   //If BUTTON3 is pressed turn on LED3 and write 3 into the array at spot 4
-      digitalWrite(LED3, HIGH);
-      userarr[3] = 3;
-      delay(500);
-      digitalWrite(LED3, LOW);
-      Serial.print("ARR4 = ");
-      Serial.println(userarr[3]);
-      counter++;
-    }
-    else if(digitalRead(BUTTON4) == LOW){   //If BUTTON4 is pressed turn on LED4 and write 4 into the array at spot 4
-      digitalWrite(LED4, HIGH);
-      userarr[3] = 4;
-      delay(500);
-      digitalWrite(LED4, LOW);
-      Serial.print("ARR4 = ");
-      Serial.println(userarr[3]);
-      counter++;
-    }
-  }
-  if(counter == 5){   //Once four inputs from the user are receieved, compare the two arrays
+  if(counterforsizeofarr == sizeofarr && counter == 1){   //as soon as the array is filled, print out the array and see if the two arrays are matching
+    Serial.print("Your Answer: ");
     for(int i = 0; i < sizeofarr; i++){ //this loop will output the sequence of numbers that you inputted. This is only for debugging
-      Serial.println(userarr[i]);
+      Serial.print(userarr[i]);
     }
     compare();    //code to compare the two sequences of numbers
-    counter++;    //END
+    counter++;    //increment counter so that the code doesnt stay in this loop
   } 
 }
