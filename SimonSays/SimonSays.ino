@@ -13,8 +13,8 @@ int counter = 0;  //counter so code doesnt run in a loop forever
 int correct = 1;  //variable to see if both arr sequences match
 int sizeofarr = 5;    //max size of the array
 int startdelay = 500;   //how long each LED stays on for
-int numarr[10];    //array in which the random number is stored
-int userarr[10];   //sequence of numbers that user inputted
+int numarr[5];    //array in which the random number is stored
+int userarr[5];   //sequence of numbers that user inputted
 int counterforsizeofarr = 0;    //counter for adding user inputs into an array
 
 void setup() {
@@ -147,7 +147,7 @@ void buttonclick(){   //function that will check which button the user clicked
       userarr[counterforsizeofarr] = i-1;   //set the user arr to the number represented by the led
       delay(500);
       digitalWrite(i+5, LOW);   //turn off the led
-      Serial.print("ARR");Serial.print(counterforsizeofarr);Serial.print(" = ");
+      Serial.print("ARRAY[");Serial.print(counterforsizeofarr);Serial.print("] = ");
       Serial.println(userarr[counterforsizeofarr]);
       counterforsizeofarr++;
     }
