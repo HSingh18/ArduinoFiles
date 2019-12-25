@@ -13,7 +13,8 @@ Overview
 	The program involves scanning the surrounding area, and looking for the greatest distance by using an ultrasonic sensor. 
 	Once the largest distance is found after scanning, the vehicle should move in that direction until the value the ultrasonic sensor being read is less than 20 to prevent collision.
 
-Future Plans
+Improvements
+	Improvements can be made to efficieny of the code and the hardware on the vehicle. 
 	In the future we expect to use applications such as tensorflow and its AI capabilities along with OpenCV and its image processing capabilities to further improve vehicles. 
 
 System Components
