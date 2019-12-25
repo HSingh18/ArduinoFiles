@@ -11,7 +11,10 @@ Overview
 	The directions of travel such as forward and backward are defined as functions that are compatible with the application. 
 	The second mode is a fully autonomous mode where the SUV will drive on its own using an ultrasonic sensor scanning the area around it. 
 	The program involves scanning the surrounding area, and looking for the greatest distance by using an ultrasonic sensor. 
-	Once the largest distance is found after scanning, the vehicle should move in that direction until the value the ultrasonic sensor being read is less than 20 to prevent collision. 
+	Once the largest distance is found after scanning, the vehicle should move in that direction until the value the ultrasonic sensor being read is less than 20 to prevent collision.
+
+Future Plans
+	In the future we expect to use applications such as tensorflow and its AI capabilities along with OpenCV and its image processing capabilities to further improve vehicles. 
 
 System Components
 	Arduino UNO
