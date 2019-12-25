@@ -17,7 +17,7 @@ System Components
 	Arduino UNO
 	Breadboard
 	Servo Arm
-	Ultrasonic Sensor [HC-SR04
+	Ultrasonic Sensor [HC-SR04]
 	Wireless Controller [Bluetooth Module]
 	Various Wires
 	Photoresistors
