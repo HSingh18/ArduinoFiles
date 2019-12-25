@@ -17,7 +17,7 @@ System Components
 	Arduino UNO
 	Breadboard
 	Servo Arm
-	Ultrasonic Sensor
+	Ultrasonic Sensor [HC-SR04
 	Wireless Controller [Bluetooth Module]
 	Various Wires
 	Photoresistors
@@ -33,4 +33,5 @@ How it Works:
 	If the systems find an obstacle in its course, it will stop initiate a rescan, move backward and travel in the direction of least obstacles.  
 
 References:
+	
 	
